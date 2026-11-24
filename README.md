@@ -1,6 +1,12 @@
 # WB.I18N.Wpf
 
-面向 .NET 8 WPF 的 `.resx` 多语言工具库。资源声明、生成的 `I18N.GetString` / `I18N.Format` / `I18N.Current.LanguageTag` 与 `WB.I18N.Avalonia` 2.2.0 保持相近的调用方式；界面绑定只使用 WPF 的 `MarkupExtension`、`Binding` 和 `MultiBinding`。
+面向 .NET 6、7、8、9、10 WPF 的 `.resx` 多语言工具库。资源声明、生成的 `I18N.GetString` / `I18N.Format` / `I18N.Current.LanguageTag` 与 `WB.I18N.Avalonia` 2.2.0 保持相近的调用方式；界面绑定只使用 WPF 的 `MarkupExtension`、`Binding` 和 `MultiBinding`。
+
+## 支持的目标框架
+
+从 1.1.0 起，NuGet 包分别包含 `net6.0-windows`、`net7.0-windows`、`net8.0-windows`、`net9.0-windows`、`net10.0-windows` 五套 WPF 程序集；源生成器保持 `netstandard2.0`，由使用者的 C# 编译器加载。应用项目应使用对应的 Windows 目标框架和 `<UseWPF>true</UseWPF>`。
+
+构建完整解决方案或打包五套程序集需要 .NET 10 SDK；在 Visual Studio 中编辑和构建 .NET 10 目标需要 [Visual Studio 2026](https://learn.microsoft.com/en-us/dotnet/core/install/windows#net-versions-and-visual-studio)。现有 Visual Studio 2022 的 .NET 8 WPF 应用仍可引用本 NuGet 包中的 `net8.0-windows` 资产。使用 NuGet 包开发 .NET 6 应用时，已验证 .NET 6 SDK 6.0.428 可运行自动生成键的功能；生成器使用 Roslyn 4.3.1，较早的编译器版本可能无法加载。只运行某个 Demo 目标时，机器还需安装对应版本的 Windows Desktop 运行时。
 
 ## 资源声明
 
@@ -63,9 +69,9 @@ string message = I18N.Format(I18N.Welcome, "Alice");
 
 ```csharp
 I18N.Current.LanguageTag = "en-US";
-string title = I18N.GetString("Title");
+string title = I18N.GetString(I18N.Title);
 string fallback = I18N.GetString("NotDefined", "备用文案");
-string message = I18N.Format("Welcome", "Alice");
+string message = I18N.Format(I18N.Welcome, "Alice");
 ```
 
 `LanguageTag` 默认是 `zh`；可设置 .NET 识别的语言或地区标签，空值和无效值会被忽略。切换只改变本库的语言状态，不修改线程的 `CurrentCulture` 或 `CurrentUICulture`。`Format` 按当前选择的语言格式化数字与日期。资源按当前地区、上级语言、默认 `.resx` 回退；仍找不到键时使用 `Fallback`，没有备用文案时显示键名。空键返回备用文案或空字符串。自 1.0.2 起，非空资源键按原样查询，首尾空格也属于键名；例如 `Capacity` 与 `Capacity ` 可分别使用。
@@ -74,10 +80,10 @@ string message = I18N.Format("Welcome", "Alice");
 
 库已映射到 WPF 默认 XAML 命名空间。窗口使用标准 `xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"` 时，不用另行声明 `xmlns:i18n`，直接写 `{I18N ...}` 或 `<I18N>`。
 
-固定键与备用文案：
+固定键优先使用自动生成的常量；在窗口中声明 `xmlns:local="clr-namespace:MyApp.Localization"`。缺失键用原始字符串演示备用文案：
 
 ```xml
-<TextBlock Text="{I18N Key=Title}" />
+<TextBlock Text="{I18N Key={x:Static local:I18N.Title}}" />
 <TextBlock Text="{I18N Key=Missing, Fallback='备用文案'}" />
 ```
 
@@ -92,7 +98,7 @@ string message = I18N.Format("Welcome", "Alice");
 ```xml
 <TextBlock>
   <TextBlock.Text>
-    <I18N Key="Welcome">
+    <I18N Key="{x:Static local:I18N.Welcome}">
       <I18N.Arguments>
         <Binding Path="UserName" />
       </I18N.Arguments>
@@ -116,7 +122,7 @@ string message = I18N.Format("Welcome", "Alice");
 | 用法 | Demo 中的写法或结果 |
 | --- | --- |
 | 当前语言 | `I18N.Current.LanguageTag`；点击语言按钮时已有界面立即刷新 |
-| 固定资源键 | `{I18N Key=Greeting}` |
+| 固定资源键 | `{I18N Key=Greeting}` 和 `{I18N Key={x:Static local:I18N.Greeting}}` |
 | 固定备用文案 | `{I18N Key=MissingLiteral, Fallback='固定备用文案'}` |
 | 绑定资源键与备用文案 | `{I18N Key={Binding ResourceKey}, Fallback={Binding FallbackText}}`；两个属性可分别变化 |
 | 缺键无备用文案 | `{I18N Key=NotDefinedWithoutFallback}`；直接显示键名 |
@@ -130,7 +136,15 @@ string message = I18N.Format("Welcome", "Alice");
 
 ```powershell
 dotnet build .\WB.I18N.Wpf.sln -c Release
-dotnet run --project .\samples\WB.I18N.Wpf.Sample\WB.I18N.Wpf.Sample.csproj -c Release -- --verify
+$demo = '.\samples\WB.I18N.Wpf.Sample\WB.I18N.Wpf.Sample.csproj'
+foreach ($framework in @('net6.0-windows', 'net7.0-windows', 'net8.0-windows', 'net9.0-windows', 'net10.0-windows'))
+{
+    dotnet run --project $demo -c Release -f $framework -- --verify
+    if ($LASTEXITCODE -ne 0)
+    {
+        throw "$framework 的 WPF 自检失败。"
+    }
+}
 ```
 
 打包命令：

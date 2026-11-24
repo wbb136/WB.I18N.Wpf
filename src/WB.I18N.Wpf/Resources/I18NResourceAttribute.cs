@@ -11,7 +11,11 @@ public sealed class I18NResourceAttribute : Attribute
     /// <param name="baseName">资源的完整清单名称，省略扩展名和语言后缀。</param>
     public I18NResourceAttribute(string baseName)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(baseName);
+        ArgumentNullException.ThrowIfNull(baseName);
+        if (string.IsNullOrWhiteSpace(baseName))
+        {
+            throw new ArgumentException("资源名称不能为空或空白。", nameof(baseName));
+        }
         _baseName = baseName;
     }
 

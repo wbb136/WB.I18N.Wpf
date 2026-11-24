@@ -162,7 +162,10 @@ public sealed class I18NResourceGenerator : IIncrementalGenerator
         Location location = resource.TargetNode.GetLocation();
         if (resource.TargetNode is not ClassDeclarationSyntax classDeclaration ||
             resource.TargetSymbol is not INamedTypeSymbol { IsStatic: true, Arity: 0, ContainingType: null } target ||
-            classDeclaration.Modifiers.Any(SyntaxKind.FileKeyword) ||
+            classDeclaration.Modifiers.Any(static modifier =>
+            {
+                return modifier.ValueText == "file";
+            }) ||
             !classDeclaration.Modifiers.Any(SyntaxKind.PartialKeyword))
         {
             context.ReportDiagnostic(Diagnostic.Create(InvalidDeclaration, location));

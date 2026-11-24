@@ -1,6 +1,6 @@
 # WPF I18N Demo：完整用法
 
-运行本项目即可看到左侧写法、右侧实时结果。顶部四个按钮分别切换 `zh` / `en-US`、资源键、格式参数和绑定备用文案。XAML 使用 WPF 默认命名空间，**不需要**声明 `xmlns:i18n`。
+运行本项目即可看到左侧写法、右侧实时结果。顶部四个按钮分别切换 `zh` / `en-US`、资源键、格式参数和绑定备用文案。XAML 使用 WPF 默认命名空间，**不需要**声明 `xmlns:i18n`。Demo 从 1.1.0 起可分别运行在 .NET 6、7、8、9、10 WPF；完整构建需要 .NET 10 SDK，运行还需安装相应版本的 Windows Desktop 运行时。
 
 ## 1. 声明 `.resx` 入口
 
@@ -106,8 +106,16 @@ string formatted = I18N.Format(I18N.ProductSummary, "A-01", 1234.5m);
 
 ```powershell
 dotnet build .\WB.I18N.Wpf.sln -c Release
-dotnet run --project .\samples\WB.I18N.Wpf.Sample\WB.I18N.Wpf.Sample.csproj -c Release
-dotnet run --project .\samples\WB.I18N.Wpf.Sample\WB.I18N.Wpf.Sample.csproj -c Release -- --verify
+$demo = '.\samples\WB.I18N.Wpf.Sample\WB.I18N.Wpf.Sample.csproj'
+dotnet run --project $demo -c Release -f net8.0-windows
+foreach ($framework in @('net6.0-windows', 'net7.0-windows', 'net8.0-windows', 'net9.0-windows', 'net10.0-windows'))
+{
+    dotnet run --project $demo -c Release -f $framework -- --verify
+    if ($LASTEXITCODE -ne 0)
+    {
+        throw "$framework 的 WPF 自检失败。"
+    }
+}
 ```
 
 `--verify` 会打开真实 WPF 窗口，检查中英文切换、生成键的 C# 与 `x:Static` 用法、固定键和绑定键、两种备用文案、单/多参数格式化，以及上级语言和默认资源回退；验证失败时返回非零退出码。
