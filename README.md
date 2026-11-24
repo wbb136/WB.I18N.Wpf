@@ -1,12 +1,12 @@
 # WB.I18N.Wpf
 
-面向 .NET 6、7、8、9、10 WPF 的 `.resx` 多语言工具库。资源声明、生成的 `I18N.GetString` / `I18N.Format` / `I18N.Current.LanguageTag` 与 `WB.I18N.Avalonia` 2.2.0 保持相近的调用方式；界面绑定只使用 WPF 的 `MarkupExtension`、`Binding` 和 `MultiBinding`。
+面向 .NET 6、7、8、9 WPF 的 `.resx` 多语言工具库。资源声明、生成的 `I18N.GetString` / `I18N.Format` / `I18N.Current.LanguageTag` 与 `WB.I18N.Avalonia` 2.2.0 保持相近的调用方式；界面绑定只使用 WPF 的 `MarkupExtension`、`Binding` 和 `MultiBinding`。
 
 ## 支持的目标框架
 
-从 1.1.0 起，NuGet 包分别包含 `net6.0-windows`、`net7.0-windows`、`net8.0-windows`、`net9.0-windows`、`net10.0-windows` 五套 WPF 程序集；源生成器保持 `netstandard2.0`，由使用者的 C# 编译器加载。应用项目应使用对应的 Windows 目标框架和 `<UseWPF>true</UseWPF>`。
+从 1.1.1 起，NuGet 包分别包含 `net6.0-windows`、`net7.0-windows`、`net8.0-windows`、`net9.0-windows` 四套 WPF 程序集；源生成器保持 `netstandard2.0`，由使用者的 C# 编译器加载。应用项目应使用对应的 Windows 目标框架和 `<UseWPF>true</UseWPF>`。
 
-构建完整解决方案或打包五套程序集需要 .NET 10 SDK；在 Visual Studio 中编辑和构建 .NET 10 目标需要 [Visual Studio 2026](https://learn.microsoft.com/en-us/dotnet/core/install/windows#net-versions-and-visual-studio)。现有 Visual Studio 2022 的 .NET 8 WPF 应用仍可引用本 NuGet 包中的 `net8.0-windows` 资产。使用 NuGet 包开发 .NET 6 应用时，已验证 .NET 6 SDK 6.0.428 可运行自动生成键的功能；生成器使用 Roslyn 4.3.1，较早的编译器版本可能无法加载。只运行某个 Demo 目标时，机器还需安装对应版本的 Windows Desktop 运行时。
+构建完整解决方案或打包四套程序集需要 .NET 9 SDK；在 Visual Studio 中编辑和构建 .NET 9 目标需要 [Visual Studio 2022 17.12 或更高版本](https://learn.microsoft.com/en-us/dotnet/core/install/windows#net-versions-and-visual-studio)。现有 Visual Studio 2022 的 .NET 8 WPF 应用仍可引用本 NuGet 包中的 `net8.0-windows` 资产。使用 NuGet 包开发 .NET 6 应用时，已验证 .NET 6 SDK 6.0.428 可运行自动生成键的功能；生成器使用 Roslyn 4.3.1，较早的编译器版本可能无法加载。只运行某个 Demo 目标时，机器还需安装对应版本的 Windows Desktop 运行时。
 
 ## 资源声明
 
@@ -117,19 +117,20 @@ string message = I18N.Format(I18N.Welcome, "Alice");
 
 打开 `WB.I18N.Wpf.sln`，运行 `samples/WB.I18N.Wpf.Sample`。Demo 左列展示实际写法，右列展示运行结果；顶部按钮可切换 `zh` / `en-US`、循环资源键、更新格式参数和备用文案。它包含以下全部主要调用方式：
 
-示例项目中的 `samples/WB.I18N.Wpf.Sample/README.md` 给出每种调用的完整代码。
+示例目录包含全部可运行源码；`samples/WB.I18N.Wpf.Sample/README.md` 列出每个文件、完整复制步骤及独立项目的包引用配置。
 
 | 用法 | Demo 中的写法或结果 |
 | --- | --- |
 | 当前语言 | `I18N.Current.LanguageTag`；点击语言按钮时已有界面立即刷新 |
-| 固定资源键 | `{I18N Key=Greeting}` 和 `{I18N Key={x:Static local:I18N.Greeting}}` |
+| 固定资源键 | `{I18N Key={x:Static local:I18N.Greeting}}` |
 | 固定备用文案 | `{I18N Key=MissingLiteral, Fallback='固定备用文案'}` |
+| 样式 Setter | `LocalizedGreetingStyle` 的 `TextBlock.Text` 使用 `{I18N Key={x:Static local:I18N.Greeting}}`，语言切换时刷新 |
 | 绑定资源键与备用文案 | `{I18N Key={Binding ResourceKey}, Fallback={Binding FallbackText}}`；两个属性可分别变化 |
 | 缺键无备用文案 | `{I18N Key=NotDefinedWithoutFallback}`；直接显示键名 |
 | 父级语言回退 | 选 `en-US`，`ParentOnly` 从 `Language.en.resx` 读取 |
 | 默认资源回退 | 选 `en-US`，`NeutralOnly` 从默认 `Language.resx` 读取 |
-| 单参数格式化 | `<I18N Key="ItemCount">` 的 `Arguments` 包含一个 `Binding` |
-| 多参数格式化 | `<I18N Key="ProductSummary">` 的 `Arguments` 包含产品编号与金额两个 `Binding`，金额按所选语言格式化 |
+| 单参数格式化 | `<I18N Key="{x:Static local:I18N.ItemCount}">` 的 `Arguments` 包含一个 `Binding` |
+| 多参数格式化 | `<I18N Key="{x:Static local:I18N.ProductSummary}">` 的 `Arguments` 包含产品编号与金额两个 `Binding`，金额按所选语言格式化 |
 | C# 直接调用 | `I18N.GetString(key)`、`I18N.GetString(key, fallback)`、`I18N.Format(key, args)` 的结果均显示在窗口中 |
 
 资源声明的三种互斥形式见上面的“资源声明”一节；本 Demo 选用字符串资源名。以下命令会构建并执行窗口自检，覆盖中英文即时切换、资源键绑定、参数变化与各级回退：
@@ -137,7 +138,7 @@ string message = I18N.Format(I18N.Welcome, "Alice");
 ```powershell
 dotnet build .\WB.I18N.Wpf.sln -c Release
 $demo = '.\samples\WB.I18N.Wpf.Sample\WB.I18N.Wpf.Sample.csproj'
-foreach ($framework in @('net6.0-windows', 'net7.0-windows', 'net8.0-windows', 'net9.0-windows', 'net10.0-windows'))
+foreach ($framework in @('net6.0-windows', 'net7.0-windows', 'net8.0-windows', 'net9.0-windows'))
 {
     dotnet run --project $demo -c Release -f $framework -- --verify
     if ($LASTEXITCODE -ne 0)

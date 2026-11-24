@@ -36,6 +36,7 @@ internal static class VerificationRunner
         Verify("中文 Format", I18N.Format(I18N.ItemCount, 3), "数量：3");
         Verify("中文静态 XAML", ReadText(window, "GreetingText"), "你好，世界！");
         Verify("中文生成键 XAML", ReadText(window, "GeneratedKeyText"), "你好，世界！");
+        Verify("中文样式 Setter", ReadText(window, "StyledGreetingText"), "你好，世界！");
         VerifyBindingKind(window, "GreetingText", expectMultiBinding: false);
         VerifyBindingKind(window, "LiteralFallbackText", expectMultiBinding: false);
         VerifyBindingKind(window, "DynamicText", expectMultiBinding: true);
@@ -74,18 +75,19 @@ internal static class VerificationRunner
         Verify("父级 en 资源", I18N.GetString(I18N.Greeting), "Hello, world!");
         Verify("英文静态 XAML", ReadText(window, "GreetingText"), "Hello, world!");
         Verify("英文生成键 XAML", ReadText(window, "GeneratedKeyText"), "Hello, world!");
+        Verify("英文样式 Setter", ReadText(window, "StyledGreetingText"), "Hello, world!");
         Verify("英文动态资源键", ReadText(window, "DynamicText"), "Hello, world!");
         Verify("英文固定备用文案", ReadText(window, "LiteralFallbackText"), "固定备用文案");
         Verify("英文缺失键显示键名", ReadText(window, "MissingKeyText"), "NotDefinedWithoutFallback");
         Verify("en-US 父级资源回退", ReadText(window, "ParentFallbackText"), "English parent resource");
         Verify("英文格式参数", ReadText(window, "CountText"), "Items: 3");
         Verify("英文多参数 XAML", ReadText(window, "MultiText"), englishSummary);
-        Verify("中性资源回退", I18N.GetString("NeutralOnly"), "仅默认资源");
+        Verify("中性资源回退", I18N.GetString(I18N.NeutralOnly), "仅默认资源");
         Verify("中性资源 XAML 回退", ReadText(window, "NeutralFallbackText"), "仅默认资源");
         Verify("英文 C# GetString 展示", ReadText(window, "CodeGetStringText"), "Hello, world!");
         Verify("英文 C# Format 展示", ReadText(window, "CodeFormatText"), englishSummary);
 
-        viewModel.ResourceKey = "Secondary";
+        viewModel.ResourceKey = I18N.Secondary;
         viewModel.Count = 5;
         viewModel.ProductCode = "B-02";
         viewModel.Amount = 2345.6m;
@@ -102,7 +104,7 @@ internal static class VerificationRunner
         Verify("参数绑定变化", ReadText(window, "CountText"), "Items: 5");
         Verify("多个参数绑定变化", ReadText(window, "MultiText"), updatedSummary);
         Verify("C# 格式化参数变化", ReadText(window, "CodeFormatText"), updatedSummary);
-        Verify("英文 Format", I18N.Format("ItemCount", 5), "Items: 5");
+        Verify("英文 Format", I18N.Format(I18N.ItemCount, 5), "Items: 5");
 
         viewModel.ResourceKey = "MissingResource";
         viewModel.FallbackText = "Fallback from view model";
@@ -114,11 +116,12 @@ internal static class VerificationRunner
         Verify("C# 缺失键回退", I18N.GetString("MissingResource", "Fallback from code"), "Fallback from code");
 
         I18N.Current.LanguageTag = "zh";
-        viewModel.ResourceKey = "Greeting";
+        viewModel.ResourceKey = I18N.Greeting;
         window.RefreshCodeExamples();
         await FlushBindingsAsync(window);
         Verify("中文切回无需重建", ReadText(window, "GreetingText"), "你好，世界！");
         Verify("中文生成键切回", ReadText(window, "GeneratedKeyText"), "你好，世界！");
+        Verify("样式 Setter 切回", ReadText(window, "StyledGreetingText"), "你好，世界！");
         Verify("动态键切回", ReadText(window, "DynamicText"), "你好，世界！");
         Verify("语言标签切回", ReadText(window, "LanguageTagText"), "zh");
     }

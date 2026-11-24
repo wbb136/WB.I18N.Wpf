@@ -8,7 +8,7 @@ public sealed class SampleViewModel : INotifyPropertyChanged
 {
     #region 展示数据
 
-    private string _resourceKey = "Greeting";
+    private string _resourceKey = I18N.Greeting;
     private string _fallbackText = "备用文案 A";
     private int _count = 3;
     private string _productCode = "A-01";
@@ -86,17 +86,17 @@ public sealed class SampleViewModel : INotifyPropertyChanged
     /// <summary>在已有资源键和缺失资源键之间循环，以演示备用文案。</summary>
     public void AdvanceResourceKey()
     {
-        if (ResourceKey == "Greeting")
+        if (ResourceKey == I18N.Greeting)
         {
-            ResourceKey = "Secondary";
+            ResourceKey = I18N.Secondary;
         }
-        else if (ResourceKey == "Secondary")
+        else if (ResourceKey == I18N.Secondary)
         {
             ResourceKey = "MissingResource";
         }
         else
         {
-            ResourceKey = "Greeting";
+            ResourceKey = I18N.Greeting;
         }
     }
 
