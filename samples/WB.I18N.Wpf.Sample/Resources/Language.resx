@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms</value>
+  </resheader>
+  <data name="WindowTitle" xml:space="preserve">
+    <value>WPF 本地化示例</value>
+  </data>
+  <data name="Greeting" xml:space="preserve">
+    <value>你好，世界！</value>
+  </data>
+  <data name="Secondary" xml:space="preserve">
+    <value>欢迎使用 WPF</value>
+  </data>
+  <data name="ItemCount" xml:space="preserve">
+    <value>数量：{0}</value>
+  </data>
+  <data name="ProductSummary" xml:space="preserve">
+    <value>设备 {0}，金额 {1:C2}</value>
+  </data>
+  <data name="SwitchLanguage" xml:space="preserve">
+    <value>切换到英文</value>
+  </data>
+  <data name="SwitchResourceKey" xml:space="preserve">
+    <value>切换资源键</value>
+  </data>
+  <data name="UpdateArguments" xml:space="preserve">
+    <value>更新格式化参数</value>
+  </data>
+  <data name="UpdateFallback" xml:space="preserve">
+    <value>更新备用文案</value>
+  </data>
+  <data name="ParentOnly" xml:space="preserve">
+    <value>中文默认资源</value>
+  </data>
+  <data name="NeutralOnly" xml:space="preserve">
+    <value>仅默认资源</value>
+  </data>
+</root>

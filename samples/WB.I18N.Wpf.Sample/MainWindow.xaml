@@ -1,0 +1,136 @@
+<Window x:Class="WB.I18N.Wpf.Sample.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:WB.I18N.Wpf.Sample"
+        Title="{I18N Key=WindowTitle}"
+        Width="1080"
+        Height="680"
+        MinWidth="900"
+        MinHeight="460">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="24">
+            <TextBlock FontSize="24"
+                       FontWeight="SemiBold"
+                       Text="{I18N Key=WindowTitle}" />
+            <WrapPanel Margin="0,18,0,16">
+                <Button x:Name="LanguageButton"
+                        Margin="0,0,12,8"
+                        Padding="12,6"
+                        Content="{I18N Key=SwitchLanguage}"
+                        Click="OnSwitchLanguage" />
+                <Button x:Name="ResourceKeyButton"
+                        Margin="0,0,12,8"
+                        Padding="12,6"
+                        Content="{I18N Key=SwitchResourceKey}"
+                        Click="OnSwitchResourceKey" />
+                <Button x:Name="ArgumentsButton"
+                        Margin="0,0,12,8"
+                        Padding="12,6"
+                        Content="{I18N Key=UpdateArguments}"
+                        Click="OnUpdateArguments" />
+                <Button x:Name="FallbackButton"
+                        Margin="0,0,12,8"
+                        Padding="12,6"
+                        Content="{I18N Key=UpdateFallback}"
+                        Click="OnUpdateFallback" />
+            </WrapPanel>
+
+            <Grid>
+                <Grid.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Margin" Value="0,8,12,8" />
+                        <Setter Property="TextWrapping" Value="Wrap" />
+                    </Style>
+                </Grid.Resources>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="540" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" FontWeight="SemiBold" Text="I18N.Current.LanguageTag" />
+                <TextBlock x:Name="LanguageTagText" Grid.Row="0" Grid.Column="1" />
+
+                <TextBlock Grid.Row="1" FontWeight="SemiBold" Text="{}{I18N Key=Greeting}" />
+                <TextBlock x:Name="GreetingText" Grid.Row="1" Grid.Column="1" Text="{I18N Key=Greeting}" />
+
+                <TextBlock Grid.Row="2" FontWeight="SemiBold"
+                           Text="{}{I18N Key=MissingLiteral, Fallback='固定备用文案'}" />
+                <TextBlock x:Name="LiteralFallbackText" Grid.Row="2" Grid.Column="1"
+                           Text="{I18N Key=MissingLiteral, Fallback='固定备用文案'}" />
+
+                <TextBlock Grid.Row="3" FontWeight="SemiBold"
+                           Text="{}{I18N Key={Binding ResourceKey}, Fallback={Binding FallbackText}}" />
+                <TextBlock x:Name="DynamicText" Grid.Row="3" Grid.Column="1"
+                           Text="{I18N Key={Binding ResourceKey}, Fallback={Binding FallbackText}}" />
+
+                <TextBlock Grid.Row="4" FontWeight="SemiBold"
+                           Text="{}{I18N Key=NotDefinedWithoutFallback}" />
+                <TextBlock x:Name="MissingKeyText" Grid.Row="4" Grid.Column="1"
+                           Text="{I18N Key=NotDefinedWithoutFallback}" />
+
+                <TextBlock Grid.Row="5" FontWeight="SemiBold" Text="{}{I18N Key=ParentOnly} (en-US → en)" />
+                <TextBlock x:Name="ParentFallbackText" Grid.Row="5" Grid.Column="1"
+                           Text="{I18N Key=ParentOnly}" />
+
+                <TextBlock Grid.Row="6" FontWeight="SemiBold" Text="{}{I18N Key=NeutralOnly} (en → 默认)" />
+                <TextBlock x:Name="NeutralFallbackText" Grid.Row="6" Grid.Column="1"
+                           Text="{I18N Key=NeutralOnly}" />
+
+                <TextBlock Grid.Row="7" FontWeight="SemiBold" Text='&lt;I18N Key="ItemCount"&gt; + Count' />
+                <TextBlock x:Name="CountText" Grid.Row="7" Grid.Column="1">
+                    <TextBlock.Text>
+                        <I18N Key="ItemCount">
+                            <I18N.Arguments>
+                                <Binding Path="Count" />
+                            </I18N.Arguments>
+                        </I18N>
+                    </TextBlock.Text>
+                </TextBlock>
+
+                <TextBlock Grid.Row="8" FontWeight="SemiBold"
+                           Text='&lt;I18N Key="ProductSummary"&gt; + ProductCode, Amount' />
+                <TextBlock x:Name="MultiText" Grid.Row="8" Grid.Column="1">
+                    <TextBlock.Text>
+                        <I18N Key="ProductSummary">
+                            <I18N.Arguments>
+                                <Binding Path="ProductCode" />
+                                <Binding Path="Amount" />
+                            </I18N.Arguments>
+                        </I18N>
+                    </TextBlock.Text>
+                </TextBlock>
+
+                <TextBlock Grid.Row="9" FontWeight="SemiBold" Text="I18N.GetString(I18N.Greeting)" />
+                <TextBlock x:Name="CodeGetStringText" Grid.Row="9" Grid.Column="1" />
+
+                <TextBlock Grid.Row="10" FontWeight="SemiBold"
+                           Text='I18N.GetString("MissingFromCode", "C# 固定备用文案")' />
+                <TextBlock x:Name="CodeGetFallbackText" Grid.Row="10" Grid.Column="1" />
+
+                <TextBlock Grid.Row="11" FontWeight="SemiBold"
+                           Text="I18N.Format(I18N.ProductSummary, ProductCode, Amount)" />
+                <TextBlock x:Name="CodeFormatText" Grid.Row="11" Grid.Column="1" />
+
+                <TextBlock Grid.Row="12" FontWeight="SemiBold"
+                           Text="{}{I18N Key={x:Static local:I18N.Greeting}}" />
+                <TextBlock x:Name="GeneratedKeyText" Grid.Row="12" Grid.Column="1"
+                           Text="{I18N Key={x:Static local:I18N.Greeting}}" />
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</Window>

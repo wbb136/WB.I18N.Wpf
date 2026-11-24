@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms</value>
+  </resheader>
+  <data name="WindowTitle" xml:space="preserve">
+    <value>WPF localization sample</value>
+  </data>
+  <data name="Greeting" xml:space="preserve">
+    <value>Hello, world!</value>
+  </data>
+  <data name="Secondary" xml:space="preserve">
+    <value>Welcome to WPF</value>
+  </data>
+  <data name="ItemCount" xml:space="preserve">
+    <value>Items: {0}</value>
+  </data>
+  <data name="ProductSummary" xml:space="preserve">
+    <value>Device {0}, amount {1:C2}</value>
+  </data>
+  <data name="SwitchLanguage" xml:space="preserve">
+    <value>Switch to Chinese</value>
+  </data>
+  <data name="SwitchResourceKey" xml:space="preserve">
+    <value>Change resource key</value>
+  </data>
+  <data name="UpdateArguments" xml:space="preserve">
+    <value>Update format arguments</value>
+  </data>
+  <data name="UpdateFallback" xml:space="preserve">
+    <value>Update fallback text</value>
+  </data>
+  <data name="ParentOnly" xml:space="preserve">
+    <value>English parent resource</value>
+  </data>
+</root>

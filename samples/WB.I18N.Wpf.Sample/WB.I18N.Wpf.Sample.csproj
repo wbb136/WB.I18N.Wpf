@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>WB.I18N.Wpf.Sample</RootNamespace>
+    <AssemblyName>WB.I18N.Wpf.Sample</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\WB.I18N.Wpf\WB.I18N.Wpf.csproj" />
+    <ProjectReference Include="..\..\src\WB.I18N.Generator\WB.I18N.Generator.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false" />
+    <AdditionalFiles Include="Resources\Language.resx" />
+  </ItemGroup>
+</Project>
